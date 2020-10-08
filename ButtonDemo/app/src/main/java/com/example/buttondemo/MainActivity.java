@@ -24,12 +24,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*public void myButtonClick(View v){
+    public void myButtonClick(View v){
         //b.setText("clicked");
-        ((Button) v).setText("hi");
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((Button) v).setText("hello there");
+            }
+        });
 
-
-    }*/
+    }
 
 
 }
