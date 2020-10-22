@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -95,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -108,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -121,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -134,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -146,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -158,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -170,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -182,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -193,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         b13.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                output.setText("");
+                output.setText("Welcome");
 
             }
         });
@@ -203,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
@@ -234,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(str.contains("-+") || str.contains("-/") || str.contains("-*")) noErr = false;
                 if(str.contains("/+") || str.contains("/-") || str.contains("/*")) noErr = false;
                 if(str.contains("*/") || str.contains("*-") || str.contains("*+")) noErr = false;
-
+                if(str.equals("Welcome")) noErr = false;
 
                 if(noErr){
                 while(splits.length > 1) {
@@ -280,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }else{
                     finalResult = "Error";
+                    if(str.equals("Welcome")) finalResult = "Welcome";
                 }
 
                 System.out.println(finalResult);
@@ -296,6 +310,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String prev = (String) output.getText();
+                prev = prev.replace("Welcome", "");
                 prev += btn.getText();
                 output.setText(prev);
 
