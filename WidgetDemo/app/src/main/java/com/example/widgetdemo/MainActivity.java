@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.webkit.WebView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
  Switch aSwitch;
  TextView textShow;
  EditText editText;
+ WebView webview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +31,9 @@ public class MainActivity extends AppCompatActivity {
         seekBar = findViewById((R.id.seekBar));
         textSwitch = findViewById(R.id.switchText);
         aSwitch = findViewById(R.id._switch);
-        textShow = findViewById(R.id.id_editText)
+        textShow = findViewById(R.id.id_editText);
         editText = findViewById(R.id.editTextTextPersonName);
+        webview = findViewById(R.id.webviews);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -79,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
 
     }
 }
