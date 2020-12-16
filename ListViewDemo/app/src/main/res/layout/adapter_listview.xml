@@ -9,7 +9,6 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         app:srcCompat="@android:drawable/btn_star_big_on"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -17,7 +16,7 @@
         android:id="@+id/id_adapter_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:padding="10dp"
         android:text="TextView"
         android:textSize="20dp"
         android:textStyle="bold" />
