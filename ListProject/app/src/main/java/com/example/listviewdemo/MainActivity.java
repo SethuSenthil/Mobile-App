@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,14 +32,18 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.id_main_listview);
 
-        arrayList = new ArrayList<>();
-        arrayList.add(new Karacter(R.drawable.anakin, "Anakin Skywalker", "Many know him as 'the chosen one'. Aspiring dark lord of the Sith!"));
-        arrayList.add(new Karacter(R.drawable.ahsoka, "Ahsoka Tano", "The Padawan of Anakin Skywalker who fought in the clonewars until she was falsely accused of treason and terrorism."));
-        arrayList.add(new Karacter(R.drawable.obiwan, "Obi-Wan Kenobi", "A nobel jedi who plays a big role in the skywalker saga, training both Anakin and his son. "));
-        arrayList.add(new Karacter(R.drawable.yoda, "Yoda", "Known for his unique way to articulate sentences backward, he is one of the most powerful and wisest jedis to exist during the fall of the republic"));
+        if(savedInstanceState == null) {
+            arrayList = new ArrayList<>();
+            arrayList.add(new Karacter(R.drawable.anakin, "Anakin Skywalker", "Many know him as 'the chosen one'. Aspiring dark lord of the Sith!"));
+            arrayList.add(new Karacter(R.drawable.ahsoka, "Ahsoka Tano", "The Padawan of Anakin Skywalker who fought in the clonewars until she was falsely accused of treason and terrorism."));
+            arrayList.add(new Karacter(R.drawable.obiwan, "Obi-Wan Kenobi", "A nobel jedi who plays a big role in the skywalker saga, training both Anakin and his son. "));
+            arrayList.add(new Karacter(R.drawable.yoda, "Yoda", "Known for his unique way to articulate sentences backwards, he is one of the most powerful and wisest jedis to exist during the fall of the republic"));
 
-        listViewAdapter adapter = new listViewAdapter(this, R.layout.adapter_listview, arrayList);
-        listView.setAdapter(adapter);
+            listViewAdapter adapter = new listViewAdapter(this, R.layout.adapter_listview, arrayList);
+            listView.setAdapter(adapter);
+        }else{
+            //arrayList = savedInstanceState.getParcelableArrayList(SAVESTATE_COUNT);
+        }
 
     }
 
@@ -72,11 +77,29 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) mainActivityContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             View adapterLayout = inflater.inflate(xml, null);
+
+            adapterLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        TextView des = findViewById(R.id.textView);
+                        des.setText(list.get(position).des);
+                    }
+
+                }
+            });
+
+
+
             TextView textView = adapterLayout.findViewById(R.id.id_adapter_textview);
             textView.setText(list.get(position).name);
 
             ImageView image = adapterLayout.findViewById(R.id.imageView);
-                    image.setImageResource(list.get(position).url);
+            image.setImageResource(list.get(position).url);
+
+
+
 
             return adapterLayout;
 
