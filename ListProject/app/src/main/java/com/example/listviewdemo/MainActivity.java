@@ -26,6 +26,18 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Karacter> arrayList;
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("KEY_LIST", arrayList);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        arrayList = (ArrayList<Karacter>) savedInstanceState.getSerializable("KEY_LIST");
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -39,11 +51,12 @@ public class MainActivity extends AppCompatActivity {
             arrayList.add(new Karacter(R.drawable.obiwan, "Obi-Wan Kenobi", "A nobel jedi who plays a big role in the skywalker saga, training both Anakin and his son. "));
             arrayList.add(new Karacter(R.drawable.yoda, "Yoda", "Known for his unique way to articulate sentences backwards, he is one of the most powerful and wisest jedis to exist during the fall of the republic"));
 
-            listViewAdapter adapter = new listViewAdapter(this, R.layout.adapter_listview, arrayList);
-            listView.setAdapter(adapter);
         }else{
-            //arrayList = savedInstanceState.getParcelableArrayList(SAVESTATE_COUNT);
+            arrayList = (ArrayList<Karacter>)  savedInstanceState.getSerializable("KEY_LIST");
         }
+
+        listViewAdapter adapter = new listViewAdapter(this, R.layout.adapter_listview, arrayList);
+        listView.setAdapter(adapter);
 
     }
 
@@ -87,6 +100,15 @@ public class MainActivity extends AppCompatActivity {
                         des.setText(list.get(position).des);
                     }
 
+                }
+            });
+
+           Button remove = adapterLayout.findViewById(R.id.button_rem);
+
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    remove(list.get(position));
                 }
             });
 
