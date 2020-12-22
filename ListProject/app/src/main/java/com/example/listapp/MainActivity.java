@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.util.ArrayList;
@@ -26,6 +27,29 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listView;
     ArrayList<Karacter> arrayList;
+
+    public class Karacter {
+        public Boolean selected;
+        public int url;
+        public String name;
+        public String des;
+        public double rating;
+        public String videoURL;
+
+        public Karacter( Boolean selected, int url, String name, String des, double rating, String videoURL){
+            this.selected = selected;
+            this.url = url;
+            this.name = name;
+            this.des = des;
+            this.rating = rating;
+            this.videoURL = videoURL;
+
+        }
+
+        void setSelected(Boolean bool){
+            selected = bool;
+        }
+    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -48,10 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState == null) {
             arrayList = new ArrayList<>();
-            arrayList.add(new Karacter(R.drawable.anakin, "Anakin Skywalker", "Many know him as 'the chosen one'. Aspiring dark lord of the Sith!",4.3, "https://sethusenthil.com/Sample-Videos-For-Mobile/Anakin.mp4"));
-            arrayList.add(new Karacter(R.drawable.ahsoka, "Ahsoka Tano", "The Padawan of Anakin Skywalker who fought in the clonewars until she was falsely accused of treason and terrorism.",3.1, "https://sethusenthil.com/Sample-Videos-For-Mobile/Ahsoka.mp4"));
-            arrayList.add(new Karacter(R.drawable.obiwan, "Obi-Wan Kenobi", "A nobel jedi who plays a big role in the skywalker saga, training both Anakin and his son. ", 3.3, "https://sethusenthil.com/Sample-Videos-For-Mobile/obiwan.mp4"));
-            arrayList.add(new Karacter(R.drawable.yoda, "Yoda", "Known for his unique way to articulate sentences backwards, he is one of the most powerful and wisest jedis to exist during the fall of the republic", 5.0, "https://sethusenthil.com/Sample-Videos-For-Mobile/Yoda.mp4"));
+            arrayList.add(new Karacter(false, R.drawable.anakin, "Anakin Skywalker", "Many know him as 'the chosen one'. Aspiring dark lord of the Sith!",4.3, "https://sethusenthil.com/Sample-Videos-For-Mobile/Anakin.mp4"));
+            arrayList.add(new Karacter(false, R.drawable.ahsoka, "Ahsoka Tano", "The Padawan of Anakin Skywalker who fought in the clonewars until she was falsely accused of treason and terrorism.",3.1, "https://sethusenthil.com/Sample-Videos-For-Mobile/Ahsoka.mp4"));
+            arrayList.add(new Karacter(false, R.drawable.obiwan, "Obi-Wan Kenobi", "A nobel jedi who plays a big role in the skywalker saga, training both Anakin and his son. ", 3.3, "https://sethusenthil.com/Sample-Videos-For-Mobile/obiwan.mp4"));
+            arrayList.add(new Karacter(false, R.drawable.yoda, "Yoda", "Known for his unique way to articulate sentences backwards, he is one of the most powerful and wisest jedis to exist during the fall of the republic", 5.0, "https://sethusenthil.com/Sample-Videos-For-Mobile/Yoda.mp4"));
 
         }else{
             arrayList = (ArrayList<Karacter>)  savedInstanceState.getSerializable("KEY_LIST");
@@ -60,23 +84,6 @@ public class MainActivity extends AppCompatActivity {
         listViewAdapter adapter = new listViewAdapter(this, R.layout.adapter_listview, arrayList);
         listView.setAdapter(adapter);
 
-    }
-
-    public class Karacter {
-        public int url;
-        public String name;
-        public String des;
-        public double rating;
-        public String videoURL;
-
-        public Karacter( int url, String name, String des, double rating, String videoURL){
-            this.url = url;
-            this.name = name;
-            this.des = des;
-            this.rating = rating;
-            this.videoURL = videoURL;
-
-        }
     }
 
     public class listViewAdapter extends ArrayAdapter<Karacter> {
@@ -98,20 +105,44 @@ public class MainActivity extends AppCompatActivity {
             LayoutInflater inflater = (LayoutInflater) mainActivityContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             View adapterLayout = inflater.inflate(xml, null);
 
+            if(list.get(position).selected) {
+                try {
+                    TextView des = findViewById(R.id.textView);
+                    des.setText(list.get(position).des);
+
+                    VideoView videoView = findViewById(R.id.videoView);
+                    videoView.setVideoPath(list.get(position).videoURL);
+                    videoView.start();
+                } catch (Exception e) {
+                    Toast toast = Toast.makeText(MainActivity.this, list.get(position).des, Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+
             adapterLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    try {
                         TextView des = findViewById(R.id.textView);
                         des.setText(list.get(position).des);
 
                         VideoView videoView = findViewById(R.id.videoView);
                         videoView.setVideoPath(list.get(position).videoURL);
                         videoView.start();
-
-
+                    }catch(Exception e) {
+                        Toast toast = Toast.makeText(MainActivity.this, list.get(position).des, Toast.LENGTH_LONG);
+                        toast.show();
                     }
+
+                    //track selected
+                    for(Karacter kar : list){
+                        kar.setSelected(false);
+                    }
+
+                    list.get(position).setSelected(true);
+
+
 
                 }
             });
@@ -127,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                     remove(list.get(position));
                 }
             });
-
 
 
             TextView textView = adapterLayout.findViewById(R.id.id_adapter_textview);
