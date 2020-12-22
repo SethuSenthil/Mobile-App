@@ -1,4 +1,4 @@
-package com.example.listviewdemo;
+package com.example.listapp;
 
 import android.content.Context;
 

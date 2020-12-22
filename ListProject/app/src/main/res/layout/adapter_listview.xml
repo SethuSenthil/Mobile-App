@@ -28,6 +28,15 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:foregroundTint="#FF9800"
+        android:isIndicator="true"
+        android:progressTint="#FF9800" />
+
     <Button
         android:id="@+id/button_rem"
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.example.listviewdemo;
+package com.example.listapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState == null) {
             arrayList = new ArrayList<>();
-            arrayList.add(new Karacter(R.drawable.anakin, "Anakin Skywalker", "Many know him as 'the chosen one'. Aspiring dark lord of the Sith!"));
-            arrayList.add(new Karacter(R.drawable.ahsoka, "Ahsoka Tano", "The Padawan of Anakin Skywalker who fought in the clonewars until she was falsely accused of treason and terrorism."));
-            arrayList.add(new Karacter(R.drawable.obiwan, "Obi-Wan Kenobi", "A nobel jedi who plays a big role in the skywalker saga, training both Anakin and his son. "));
-            arrayList.add(new Karacter(R.drawable.yoda, "Yoda", "Known for his unique way to articulate sentences backwards, he is one of the most powerful and wisest jedis to exist during the fall of the republic"));
+            arrayList.add(new Karacter(R.drawable.anakin, "Anakin Skywalker", "Many know him as 'the chosen one'. Aspiring dark lord of the Sith!",4.3, "https://sethusenthil.com/Sample-Videos-For-Mobile/Anakin.mp4"));
+            arrayList.add(new Karacter(R.drawable.ahsoka, "Ahsoka Tano", "The Padawan of Anakin Skywalker who fought in the clonewars until she was falsely accused of treason and terrorism.",3.1, "https://sethusenthil.com/Sample-Videos-For-Mobile/Ahsoka.mp4"));
+            arrayList.add(new Karacter(R.drawable.obiwan, "Obi-Wan Kenobi", "A nobel jedi who plays a big role in the skywalker saga, training both Anakin and his son. ", 3.3, "https://sethusenthil.com/Sample-Videos-For-Mobile/obiwan.mp4"));
+            arrayList.add(new Karacter(R.drawable.yoda, "Yoda", "Known for his unique way to articulate sentences backwards, he is one of the most powerful and wisest jedis to exist during the fall of the republic", 5.0, "https://sethusenthil.com/Sample-Videos-For-Mobile/Yoda.mp4"));
 
         }else{
             arrayList = (ArrayList<Karacter>)  savedInstanceState.getSerializable("KEY_LIST");
@@ -64,11 +66,16 @@ public class MainActivity extends AppCompatActivity {
         public int url;
         public String name;
         public String des;
+        public double rating;
+        public String videoURL;
 
-        public Karacter( int url, String name, String des){
+        public Karacter( int url, String name, String des, double rating, String videoURL){
             this.url = url;
             this.name = name;
             this.des = des;
+            this.rating = rating;
+            this.videoURL = videoURL;
+
         }
     }
 
@@ -98,12 +105,21 @@ public class MainActivity extends AppCompatActivity {
                     if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                         TextView des = findViewById(R.id.textView);
                         des.setText(list.get(position).des);
+
+                        VideoView videoView = findViewById(R.id.videoView);
+                        videoView.setVideoPath(list.get(position).videoURL);
+                        videoView.start();
+
+
                     }
 
                 }
             });
 
            Button remove = adapterLayout.findViewById(R.id.button_rem);
+           RatingBar ratingBar = adapterLayout.findViewById(R.id.ratingBar);
+
+            ratingBar.setRating((float) list.get(position).rating);
 
             remove.setOnClickListener(new View.OnClickListener() {
                 @Override
