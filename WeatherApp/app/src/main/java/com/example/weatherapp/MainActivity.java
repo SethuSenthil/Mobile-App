@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -25,12 +26,21 @@ public class MainActivity extends AppCompatActivity {
     String info = "";
     JSONObject jsonObject;
 
+    //my location, for testing purposes
+    double lat = 40.399999980505676;
+    double lon = -74.51244475550735;
+
+
+    String tag = "SETHU";
+    String apiKey = "c4ec1292c4da1327e669ea1e143e73e2";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(tag, "INIT");
 
-
+        (new AsyncThread()).execute();
     }
 
     public class AsyncThread extends AsyncTask<String, Void, Void> {
@@ -38,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... voids) {
             try {
-                url = new URL("http://api.openweathermap.org/data/2.5/weather?q=monmouth%20junction&appid=c4ec1292c4da1327e669ea1e143e73e2");
+                url = new URL("https://api.openweathermap.org/data/2.5/weather?"+ "lat="+ lat + "&lon=" + lon +"&appid=" + apiKey);
                 connection = url.openConnection();
                 stream = connection.getInputStream();
                 bufferedReader = new BufferedReader(new InputStreamReader(stream));
@@ -49,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
                 jsonObject = new JSONObject(info);
 
             } catch (Exception e) {
-                Log.d("TAG",e.toString());
+                Log.d(tag,e.toString());
             }
 
-            Log.d("TAG", info);
+            Log.d(tag, info);
             return null;
         }
 
@@ -60,11 +70,12 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-           /* try {
+            try {
                 JSONObject jsonObject = new JSONObject(info);
             } catch (JSONException e) {
                 e.printStackTrace();
-            }*/
+            }
+
         }
     }
 
