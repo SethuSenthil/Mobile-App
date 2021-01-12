@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... voids) {
             try {
-                url = new URL("https://api.openweathermap.org/data/2.5/weather?"+ "lat="+ lat + "&lon=" + lon +"&appid=" + apiKey);
+                url = new URL("https://api.openweathermap.org/data/2.5/find?"+ "lat="+ lat + "&lon=" + lon +"&appid=" + apiKey);
                 connection = url.openConnection();
                 stream = connection.getInputStream();
                 bufferedReader = new BufferedReader(new InputStreamReader(stream));
