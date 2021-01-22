@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.TimeZone;
 
 
@@ -45,9 +47,16 @@ public class MainActivity extends AppCompatActivity{
     Button city1;
     Button city2;
     Button city3;
+    Button latlong;
     ImageView imageView;
     TextView tempTxt;
     TextView city;
+    TextView timeText;
+    TextView dateText;
+    TextView weatherDes;
+    EditText latText;
+    EditText longText;
+
 
     //my location, for testing purposes
     double lat = 40.399999980505676;
@@ -109,8 +118,30 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        longText = findViewById(R.id.longt);
+        latText = findViewById(R.id.lat);
+
+        latlong = findViewById(R.id.latlongbtn);
+        latlong.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+               if(longText.getText().length() > 1 && latText.getText().length() > 1){
+                   //check if edit texts are not empty
+                   (new AsyncThread()).execute();
+                   lat = Double.valueOf(latText.getText().toString());
+                   lon = Double.valueOf(longText.getText().toString());
+               }
+            }
+        });
+
+
+
         tempTxt = findViewById(R.id.textView);
         city = findViewById(R.id.des);
+        timeText = findViewById(R.id.time);
+        dateText = findViewById(R.id.date);
+        weatherDes = findViewById(R.id.wdes);
 
         imageView = findViewById(R.id.imageView);
 
@@ -125,7 +156,6 @@ public class MainActivity extends AppCompatActivity{
         JSONObject thisCity = cities.getJSONObject(i);
 
         JSONObject weatherInfo = thisCity.getJSONArray("weather").getJSONObject(0);
-X
 
         String name = thisCity.getString("name");
         Log.d(tag, name);
@@ -146,7 +176,8 @@ X
 
 
 
-        String des = weatherInfo.getString("description");
+        String des =  weatherInfo.getString("description");
+        weatherDes.setText(des.toUpperCase());
         Log.d(tag, des);
 
         String icon = weatherInfo.getString("icon");
@@ -157,10 +188,24 @@ X
         int timeStamp = thisCity.getInt("dt");
         Log.d(tag, timeStamp + "");
 
-        Date a = new Date(timeStamp * 1000);
-        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
+        Date a = new Date(timeStamp * 1000L);
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMM EEEE dd yyyy hh:mm");
+        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("America/New_York"));
         String date = DATE_FORMAT.format(a);
-        Log.d(tag, date);
+
+        String time = date.split(" ")[4];
+        String dateTexter = date.split(" ")[1] + " , " + date.split(" ")[0] + " " + date.split(" ")[2];
+
+        //remove 0
+        if(time.substring(0, 1).equals("0")){
+            time = time.substring(1);
+        }
+        timeText.setText("\uD83D\uDD53 " + time);
+        Log.d(tag, time);
+
+        dateText.setText(dateTexter);
+
+
 
          int orange = 0xFFEC6E4C;
          int defaultPurp = 0xFF5600E8;
@@ -191,11 +236,11 @@ X
                 stream = connection.getInputStream();
                 bufferedReader = new BufferedReader(new InputStreamReader(stream));
                 String line = "";
+                info = "";
                 while ((line = bufferedReader.readLine()) != null) {
                     info += line;
                 }
                 jsonObject = new JSONObject(info);
-
             } catch (Exception e) {
                 Log.d(tag, e.toString());
             }
