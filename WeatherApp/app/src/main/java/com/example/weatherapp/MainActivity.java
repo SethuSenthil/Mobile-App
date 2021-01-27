@@ -36,11 +36,6 @@ import java.util.TimeZone;
 
 
 public class MainActivity extends AppCompatActivity{
-    URL url;
-    URLConnection connection;
-    InputStream stream;
-    BufferedReader bufferedReader;
-    String info = "";
     JSONObject jsonObject;
     JSONArray cities;
     int numberOfCities = 3;
@@ -51,11 +46,17 @@ public class MainActivity extends AppCompatActivity{
     ImageView imageView;
     TextView tempTxt;
     TextView city;
+    URL url;
+    URLConnection connection;
+    InputStream stream;
+    BufferedReader bufferedReader;
+    String info = "";
     TextView timeText;
     TextView dateText;
     TextView weatherDes;
     EditText latText;
     EditText longText;
+
 
 
     //my location, for testing purposes
@@ -235,12 +236,16 @@ public class MainActivity extends AppCompatActivity{
                 connection = url.openConnection();
                 stream = connection.getInputStream();
                 bufferedReader = new BufferedReader(new InputStreamReader(stream));
+
                 String line = "";
                 info = "";
+
                 while ((line = bufferedReader.readLine()) != null) {
                     info += line;
                 }
+
                 jsonObject = new JSONObject(info);
+
             } catch (Exception e) {
                 Log.d(tag, e.toString());
             }
@@ -250,8 +255,8 @@ public class MainActivity extends AppCompatActivity{
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Void dumbVoid) {
+            super.onPostExecute(dumbVoid);
 
             try {
                 JSONObject jsonObject = new JSONObject(info);

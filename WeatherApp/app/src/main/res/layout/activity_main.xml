@@ -147,6 +147,7 @@
             android:hint="Latitude"
             android:inputType="textPersonName"
             android:shadowColor="#FFFFFF"
+            android:textColor="#FFFFFF"
             android:textColorHint="#BAB6B6" />
 
         <EditText
