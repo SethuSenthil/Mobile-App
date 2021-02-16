@@ -27,18 +27,6 @@
         app:layout_constraintStart_toStartOf="@+id/addr"
         app:layout_constraintTop_toBottomOf="@+id/addr" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="373dp"
-        android:layout_marginBottom="42dp"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/mapView"
-        app:layout_constraintStart_toStartOf="@+id/distance"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="187dp"
@@ -46,7 +34,18 @@
         android:layout_marginBottom="182dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/timetravl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="54dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="54dp"
+        android:text="timetravl"
+        app:layout_constraintEnd_toStartOf="@+id/addr"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

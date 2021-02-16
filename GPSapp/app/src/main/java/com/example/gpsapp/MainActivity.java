@@ -27,21 +27,27 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
-    TextView location_textView, distance_textView;
-    Button getDistance_Button;
     LocationManager locationManager;
-    Location globalLocation;
-    JSONObject jsonObject;
     URL url;
+    JSONObject jsonObject;
+    Location globalLocation;
     String tag = "WANDAV";
-    URLConnection connection;
+    String apiKey = "pk.d13faca0c15908b09692b0e4d21c968a";
     InputStream stream;
     BufferedReader bufferedReader;
+    URLConnection connection;
     String info = "";
     ArrayList<Location> coord = new ArrayList<Location>();
+    ArrayList<Date> timeTracker = new ArrayList<Date>();
     String display_name;
+    long overAllTime;
+    long currentTime;
+    TextView timeText, location_textView, distance_textView;
     double overallDis;
 
     @SuppressLint("WrongViewCast")
@@ -49,26 +55,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        location_textView = findViewById(R.id.addr);
         distance_textView = findViewById(R.id.distance);
-       getDistance_Button = findViewById(R.id.button);
+        location_textView = findViewById(R.id.addr);
+        timeText = findViewById(R.id.timetravl);
 
-        getDistance_Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    if (coord.size() > 0) {
-                        double distance =  (coord.get(coord.size()-2).distanceTo(coord.get(coord.size()-1))*0.00062137119);
+        currentTime = Calendar.getInstance().getTimeInMillis();
 
-                        overallDis += distance;
+        Log.d(tag, "curr" + currentTime);
 
-                        distance_textView.setText("Travelled Distance (Ovarall) "+overallDis);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
@@ -85,13 +79,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         try {
             locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 5, MainActivity.this);
@@ -110,20 +97,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 &&
                         grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission is granted. Continue the action or workflow
-                    // in your app.
                     getLocation();
                 } else {
-                    // Explain to the user that the feature is unavailable because
-                    // the features requires a permission that the user has denied.
-                    // At the same time, respect the user's decision. Don't link to
-                    // system settings in an effort to convince the user to change
-                    // their decision.
+                    //
                 }
                 return;
         }
-        // Other 'case' lines to check for other
-        // permissions this app might request.
     }
 
     @Override
@@ -135,6 +114,25 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
             coord.add(location);
             Log.d(tag, String.valueOf(location));
+
+            if (coord.size() > 0) {
+                double distance =  (coord.get(coord.size()-2).distanceTo(coord.get(coord.size()-1))*0.00062137119);
+
+                overallDis += distance;
+
+                distance_textView.setText("Travelled Distance (Overall in Miles) "+ Math.round(overallDis * 100.0)/ 100.0);
+
+                long endTime = Calendar.getInstance().getTimeInMillis();
+                Log.d(tag, "endFloat" + endTime);
+
+                float seconds = TimeUnit.MILLISECONDS.toSeconds((endTime - currentTime));
+                Log.d(tag, "endtime" + endTime);
+                Log.d(tag, "seconds" + (endTime - currentTime));
+                overAllTime += seconds;
+
+                timeText.setText("Time Traveled (Overall in Seconds)" + overAllTime);
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,22 +147,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
     public void onProviderDisabled(String provider) {
 
     }
 
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
 
     public class AsyncThread extends AsyncTask<String, Void, Void> {
 
         @Override
         protected Void doInBackground(String... voids) {
             try {
-                url = new URL("https://us1.locationiq.com/v1/reverse.php?key=pk.91acf7fa0435257013dd7955d9cab46b&lat=" + globalLocation.getLatitude() + ",&lon=" + globalLocation.getLongitude() + "&format=json");
+                url = new URL("https://us1.locationiq.com/v1/reverse.php?key="+ apiKey + "&lat=" + globalLocation.getLatitude() + ",&lon=" + globalLocation.getLongitude() + "&format=json");
                 Log.d(tag, url.toString());
                 connection = url.openConnection();
                 stream = connection.getInputStream();
