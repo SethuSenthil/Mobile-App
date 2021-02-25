@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.textview);
 
         final ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f,2.0f,1.0f,2.0f, Animation.RELATIVE_TO_SELF, .75f, Animation.RELATIVE_TO_SELF, .75f);
-        scaleAnimation.setDuration(3000);
+        scaleAnimation.setDuration(100);
 
         textView.startAnimation(scaleAnimation);
     }
