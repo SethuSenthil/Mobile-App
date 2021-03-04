@@ -36,6 +36,7 @@
         android:layout_marginTop="169dp"
         android:layout_marginBottom="29dp"
         android:background="#8FD7E2"
+        android:enabled="false"
         android:backgroundTint="#8FD7E5"
         android:text="Add Grogu"
         app:layout_constraintBottom_toTopOf="@+id/cookeImg"
