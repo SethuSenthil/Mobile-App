@@ -5,6 +5,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     AtomicInteger counter = new AtomicInteger(0);
     Context context = this;
     String tag = "GROGUUU";
+    String dbKey = "DB_KEY_THING";
+    String scoreKey = "PREVSCORE";
+    String powerKey = "POWERUPS";
 
     public static float getRandom(float[] array) {
         int rnd = new Random().nextInt(array.length);
@@ -37,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void syncText() {
         counterView.setText("Cookies: " + counter.get());
+        //save to storage
+        SharedPreferences prefs = getSharedPreferences(dbKey, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(scoreKey, counter.get());
+        editor.putInt(powerKey, grogus);
+        editor.commit();
     }
 
     @Override
@@ -49,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
         groguBtn = findViewById(R.id.groguBtn);
 
         new AsyncThread().execute();
+
+        SharedPreferences prefs = this.getSharedPreferences(dbKey, Context.MODE_PRIVATE);
+        counter.set(prefs.getInt(scoreKey, 0));
+        grogus = prefs.getInt(powerKey, 0);
+
 
         ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 1.15f, 1.0f, 1.15f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
 
@@ -122,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
                     ImageView groguImg = new ImageView(context);
                     groguImg.setId(View.generateViewId());
                     groguImg.setImageResource(R.drawable.grogu);
-                    groguImg.getLayoutParams().height = 50;
                     constraintSet.connect(groguImg.getId(), ConstraintSet.TOP, layout.getId(), ConstraintSet.TOP);
                     constraintSet.connect(groguImg.getId(), ConstraintSet.BOTTOM, layout.getId(), ConstraintSet.BOTTOM);
                     constraintSet.connect(groguImg.getId(), ConstraintSet.LEFT, layout.getId(), ConstraintSet.LEFT);
@@ -161,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         {
             @Override
             public void run() {
-                counter.getAndIncrement();
+                counter.getAndAdd( (1 * grogus));
                 syncText();
                 mHandler.postDelayed(mHandlerTask, INTERVAL);
             }
