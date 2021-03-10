@@ -1,10 +1,12 @@
 package com.example.cookieclickerapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt(scoreKey, counter.get());
         editor.putInt(powerKey, grogus);
         editor.commit();
+
+        // btn state
+        if(counter.get() >= 20){
+            groguBtn.setEnabled(true);
+        }else{
+            groguBtn.setEnabled(false);
+        }
     }
 
     @Override
@@ -61,8 +70,33 @@ public class MainActivity extends AppCompatActivity {
         new AsyncThread().execute();
 
         SharedPreferences prefs = this.getSharedPreferences(dbKey, Context.MODE_PRIVATE);
-        counter.set(prefs.getInt(scoreKey, 0));
-        grogus = prefs.getInt(powerKey, 0);
+        int counterRaw = prefs.getInt(scoreKey, 0);
+        int rawGrogs = prefs.getInt(powerKey, 0);
+
+
+        if(counterRaw + rawGrogs > 0) {
+            AlertDialog.Builder myAertBuilder = new AlertDialog.Builder(this);
+            myAertBuilder.setTitle("Continue previous game?");
+            myAertBuilder.setMessage("Grogu has sensed your previous progress through the force! Would you like to continue or erase your progress and start over?");
+            myAertBuilder.setIcon(R.drawable.grogu);
+            myAertBuilder.setPositiveButton("Use Previous Progress", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            counter.set(counterRaw);
+                            grogus = rawGrogs;
+                           syncText();
+                        }
+                    });
+            myAertBuilder.setNegativeButton("Start Over", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                   //nothing
+                }
+            });
+            myAertBuilder.show();
+
+
+        }
 
 
         ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 1.15f, 1.0f, 1.15f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
@@ -74,12 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 grogus++;
 
                 counterView.setText("Cookies: " + counter);
-
-                if(counter.get() >= 20){
-                    groguBtn.setEnabled(true);
-                }else{
-                    groguBtn.setEnabled(false);
-                }
+                syncText();
             }
         });
 
