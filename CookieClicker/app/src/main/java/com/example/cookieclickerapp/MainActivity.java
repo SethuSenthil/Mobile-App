@@ -22,9 +22,11 @@ import android.widget.TextView;
 import java.lang.reflect.Array;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
     ImageView cookie;
+    ImageView groguList;
     ConstraintLayout layout;
     TextView counterView;
     int grogus;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         cookie = findViewById(R.id.cookeImg);
         layout = findViewById(R.id.layout);
+        groguList = findViewById(R.id.powerupDisplay);
         counterView = findViewById(R.id.counterView);
         groguBtn = findViewById(R.id.groguBtn);
 
@@ -84,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             counter.set(counterRaw);
                             grogus = rawGrogs;
+                            Picasso.get().load("https://sudden-congruous-rowboat.glitch.me/" + grogus).into(groguList);
                            syncText();
                         }
                     });
@@ -106,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 counter.getAndAdd(-20);
                 grogus++;
-
+                Picasso.get().load("https://sudden-congruous-rowboat.glitch.me/" + grogus).into(groguList);
                 counterView.setText("Cookies: " + counter);
                 syncText();
             }
@@ -162,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //render Grogus
 
-                for (int i = 0; i < grogus; i++) {
+                /*for (int i = 0; i < grogus; i++) {
                     ImageView groguImg = new ImageView(context);
                     groguImg.setId(View.generateViewId());
                     groguImg.setImageResource(R.drawable.grogu);
@@ -173,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                     constraintSet.setVerticalBias(groguImg.getId(), -0.5f);
                     constraintSet.setHorizontalBias(textInCode.getId(), 0.5f);
                     groguImg.setVisibility(View.VISIBLE);
-                }
+                }*/
 
                 //random num for position
                float[] range = new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f};
