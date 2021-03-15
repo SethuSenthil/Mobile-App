@@ -60,6 +60,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void cookieAnimate(){
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 1.15f, 1.0f, 1.15f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
+        ScaleAnimation revScaleAnimation = new ScaleAnimation(1.15f,1.0f , 1.15f,1.0f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
+
+        scaleAnimation.setDuration(500);
+        revScaleAnimation.setDuration(259);
+
+        cookie.startAnimation(scaleAnimation);
+        scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                cookie.setAnimation(revScaleAnimation);
+            }
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,9 +126,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
-        ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 1.15f, 1.0f, 1.15f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
-
         groguBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,12 +142,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Log.d(tag, "Total Children:" + String.valueOf(layout.getChildCount()));
+                Log.d(tag, "Extra Views:" + String.valueOf(layout.getChildCount() - 3));
+
                 TextView textInCode = new TextView(context);
                 textInCode.setId(View.generateViewId());
                 textInCode.setText("+1");
                 textInCode.setVisibility(View.INVISIBLE);
                 textInCode.setTextColor(0xff8FD7E2);
 
+                cookieAnimate();
 
                 ScaleAnimation numberAnimation = new ScaleAnimation(2.0f, 3.0f, 2.0f, 3.0f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, 5f);
                 numberAnimation.setDuration(250);
@@ -151,8 +176,6 @@ public class MainActivity extends AppCompatActivity {
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(layout);
 
-                scaleAnimation.setDuration(500);
-                cookie.startAnimation(scaleAnimation);
                 textInCode.setVisibility(View.VISIBLE);
                 textInCode.startAnimation(numberAnimation);
 
@@ -208,9 +231,63 @@ public class MainActivity extends AppCompatActivity {
         {
             @Override
             public void run() {
-                counter.getAndAdd( (1 * grogus));
-                syncText();
-                mHandler.postDelayed(mHandlerTask, INTERVAL);
+                if(grogus > 0) {
+                    counter.getAndAdd((1 * grogus));
+                    syncText();
+
+                    TextView textInCode = new TextView(context);
+                    textInCode.setId(View.generateViewId());
+                    textInCode.setText("+" + grogus);
+                    textInCode.setVisibility(View.INVISIBLE);
+                    textInCode.setTextColor(0xff7F9E86);
+
+
+                    ScaleAnimation numberAnimation = new ScaleAnimation(2.0f, 3.0f, -1f, 3.0f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, 3f);
+                    numberAnimation.setDuration(400);
+                    numberAnimation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation arg0) {
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation arg0) {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation arg0) {
+                            layout.removeView(textInCode);
+                        }
+                    });
+
+
+                    ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+                    textInCode.setLayoutParams(params);
+                    layout.addView(textInCode);
+
+                    ConstraintSet constraintSet = new ConstraintSet();
+                    constraintSet.clone(layout);
+
+                    cookieAnimate();
+                    textInCode.setVisibility(View.VISIBLE);
+                    textInCode.startAnimation(numberAnimation);
+
+
+                    constraintSet.connect(textInCode.getId(), ConstraintSet.TOP, layout.getId(), ConstraintSet.TOP);
+                    constraintSet.connect(textInCode.getId(), ConstraintSet.BOTTOM, layout.getId(), ConstraintSet.BOTTOM);
+                    constraintSet.connect(textInCode.getId(), ConstraintSet.LEFT, layout.getId(), ConstraintSet.LEFT);
+                    constraintSet.connect(textInCode.getId(), ConstraintSet.RIGHT, layout.getId(), ConstraintSet.RIGHT);
+
+                    constraintSet.setVerticalBias(textInCode.getId(), -0.5f);
+
+                    //random num for position
+                    float[] range = new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f};
+
+                    constraintSet.setHorizontalBias(textInCode.getId(), getRandom(range));
+
+                    constraintSet.applyTo(layout);
+                }
+
+                    mHandler.postDelayed(mHandlerTask, INTERVAL);
             }
         };
 
