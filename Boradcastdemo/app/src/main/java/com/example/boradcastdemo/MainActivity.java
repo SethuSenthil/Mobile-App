@@ -22,6 +22,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendMessage(String msg, String to){
         final SmsManager smsManager = SmsManager.getDefault();
+     //   int delay = new Random().nextInt(25000 + (1 - 1000)) + 1000;  //min of 1 second delay max of 2.5 seconds
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(id, "Sending Message " + msg + " to: " + to);
                 smsManager.sendTextMessage(to, null, msg, null, null);
             }
-        }, 0);
+        }, 2500);
     }
 
 
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                         if (scanForKeywords(keywordsGreeting, message)) {
                             sendMessage(getRandomMessage("Whats", responsesGreeting), address);
                             state++;
+                            stateView.setText("State: " + state);
                         } else {
                             sendMessage("What is you sayin?", address);
                         }
@@ -105,8 +109,9 @@ public class MainActivity extends AppCompatActivity {
                         String[] responsesWatch = new String[]{"binge?",  "watch?"};
 
                         if (scanForKeywords(keywordsWatch, message)) {
-                            sendMessage(getRandomMessage("Want something to ", responsesWatch), address);
+                            sendMessage(getRandomMessage("Want something to", responsesWatch), address);
                             state++;
+                            stateView.setText("State: " + state);
                         } else {
                             sendMessage("What is you sayin?", address);
                         }
@@ -116,16 +121,27 @@ public class MainActivity extends AppCompatActivity {
                         if (scanForKeywords(keywordsYes, message)) {
                             sendMessage("Whats streaming services do you have? (Disney+, Netflix, Hulu)", address);
                             state++;
+                            stateView.setText("State: " + state);
 
                         }else {
                             sendMessage("You need to say yes", address);
                         }
-                    }else if(state == 3){
+                    }else if(state >= 4){
+
+                        Boolean alreadyHandled = false;
 
 
-                        if(message.contains("ALREADY") || message.contains("ANOTHER") ||  message.contains("YES")) {
+                        if(message.toUpperCase().contains("ALREADY") || message.toUpperCase().contains("ANOTHER") ||  message.toUpperCase().contains("YES") && state == 5) {
+                            state--;
+                            stateView.setText("State: " + state);
 
-                        } else if(message.contains("THANK")) {
+                        } else if(message.toUpperCase().contains("THANK") && state == 4) {
+                            alreadyHandled = true;
+                            String[] responsesEnd = new String[]{"np!",  "np", "no problem"};
+                            sendMessage(getRandomMessage(responsesEnd), address);
+                            sendMessage("If you want another show lmk!", address);
+                            state++;
+                            stateView.setText("State: " + state);
 
                         }   else if(message.toUpperCase().contains("ALL")){
                           disney = true;
@@ -146,34 +162,56 @@ public class MainActivity extends AppCompatActivity {
                       if(!disney && !netflix && !hulu){
                           sendMessage("Come on you need to have atleast one of these!", address);
                       }else{
-                          int rand = (int)(Math.random() * 3);
-
-                          String[] shows = new String[]{};
-                          String[] links = new String[]{};
-                          String service = "";
+                          ArrayList<String> shows = new ArrayList<String>();
+                          ArrayList<String> links = new ArrayList<String>();
+                          ArrayList<String> services = new ArrayList<String>();
 
 
-                          if(rand == 0){
+                          if(disney){
                               //disney
-                              service = "Disney+";
-                             shows = new String[]{"Mandolorian",  "Wanda Vision", "Falcon and the Winter Solder"};
-                             links = new String[]{"https://www.youtube.com/watch?v=eW7Twd85m2g",  "https://www.youtube.com/watch?v=sj9J2ecsSpo", "https://www.youtube.com/watch?v=IWBsDaFWyTE"};
 
-                          }else if(rand == 1){
+                              String[] disneyShows = new String[]{"Mandolorian",  "Wanda Vision", "Falcon and the Winter Solder"};
+                              String[] disneyLinks = new String[]{"https://www.youtube.com/watch?v=eW7Twd85m2g",  "https://www.youtube.com/watch?v=sj9J2ecsSpo", "https://www.youtube.com/watch?v=IWBsDaFWyTE"};
+
+                              Random r = new Random();
+                              int rr = r.nextInt(3) ;
+                              shows.add(disneyShows[rr]);
+                              links.add(disneyLinks[rr]);
+                              services.add("Disney+");
+
+                          }
+                          if(netflix){
                               //netflix
-                              service = "Netflix";
-                               shows = new String[]{"Outer Banks",  "Never Have I Ever", "Tiger King"};
-                               links = new String[]{"https://www.youtube.com/watch?v=uk_hFfUFXh4",  "https://www.youtube.com/watch?v=HyOCCCbxwMQ", "https://www.youtube.com/watch?v=acTdxsoa428"};
-                          }else if(rand == 2){
+
+                              String[] netflixShows = new String[]{"Outer Banks",  "Never Have I Ever", "Tiger King"};
+                              String[] netflixLinks = new String[]{"https://www.youtube.com/watch?v=uk_hFfUFXh4",  "https://www.youtube.com/watch?v=HyOCCCbxwMQ", "https://www.youtube.com/watch?v=acTdxsoa428"};
+
+                              Random r = new Random();
+                              int rr = r.nextInt(3) ;
+                              shows.add(netflixShows[rr]);
+                              links.add(netflixLinks[rr]);
+                              services.add("Netflix");
+
+                          }
+                          if(hulu){
                               //hulu
-                              service = "Hulu";
-                              shows = new String[]{"Rick and Morty",  "Big Sky", "Game of Thrones"};
-                              links = new String[]{"https://www.youtube.com/watch?v=F6Zy_mLgSNQ",  "https://www.youtube.com/watch?v=1Fs7nfZghow", "https://www.youtube.com/watch?v=rlR4PJn8b8I"};
+                              String[] huluShows = new String[]{"Rick and Morty",  "Big Sky", "Game of Thrones"};
+                              String[] huluLinks = new String[]{"https://www.youtube.com/watch?v=F6Zy_mLgSNQ",  "https://www.youtube.com/watch?v=1Fs7nfZghow", "https://www.youtube.com/watch?v=rlR4PJn8b8I"};
+
+                              Random r = new Random();
+                              int rr = r.nextInt(3) ;
+                              shows.add(huluShows[rr]);
+                              links.add(huluLinks[rr]);
+                              services.add("Hulu");
                           }
 
-                          int j = new Random().nextInt(shows.length);
+                          int j = new Random().nextInt(shows.size());
 
-                          sendMessage("You should watch " + shows[j] + " on " + service + "! \n" + links[j], address);
+                          if(!alreadyHandled && state == 3) {
+                              state++;
+                              stateView.setText("State: " + state);
+                              sendMessage("You should watch " + shows.get(j) + " on " + services.get(j) + "! \n" + links.get(j), address);
+                          }
 
                       }
                     }
@@ -181,12 +219,15 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        String permission = Manifest.permission.RECEIVE_SMS;
-        String permission2 = Manifest.permission.SEND_SMS;
-        if ( ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, permission2) != PackageManager.PERMISSION_GRANTED) {
+        String permissionGetSMS = Manifest.permission.RECEIVE_SMS;
+        String permissionSendSMS = Manifest.permission.SEND_SMS;
+
+        if ( ContextCompat.checkSelfPermission(this, permissionGetSMS) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, permissionSendSMS) != PackageManager.PERMISSION_GRANTED) {
             String[] permission_list = new String[2];
-            permission_list[0] = permission;
-            permission_list[1] = permission2;
+
+            permission_list[0] = permissionGetSMS;
+            permission_list[1] = permissionSendSMS;
+
             ActivityCompat.requestPermissions(this, permission_list, 1);
 
 
