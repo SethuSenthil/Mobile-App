@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                         }else {
                             sendMessage("You need to say yes", address);
                         }
-                    }else if(state >= 4){
+                    }else if(state >= 3){
 
                         Boolean alreadyHandled = false;
 
